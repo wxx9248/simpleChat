@@ -18,8 +18,7 @@ import java.util.Scanner;
  * @author Dr Robert Lagani&egrave;re
  * @version September 2020
  */
-public class ClientConsole
-        implements ChatIF
+public class ClientConsole implements ChatIF
 {
     //Class variables *************************************************
 
