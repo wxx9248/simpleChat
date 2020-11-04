@@ -2,7 +2,6 @@
   <configuration default="false" name="ServerConsole" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="ServerConsole" />
     <module name="simpleChat" />
-    <option name="PROGRAM_PARAMETERS" value="5556" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

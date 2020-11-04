@@ -1,8 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ClientConsole" type="Application" factoryName="Application" singleton="false">
+  <configuration default="false" name="ClientConsole2" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="ClientConsole" />
     <module name="simpleChat" />
-    <option name="PROGRAM_PARAMETERS" value="wxx9248" />
+    <option name="PROGRAM_PARAMETERS" value="Ritsu909" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

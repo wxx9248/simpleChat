@@ -44,54 +44,56 @@ public class EchoServer extends AbstractServer
      * @param client The connection from which the message originated.
      */
     @Override
-    public void handleMessageFromClient(Object msg, ConnectionToClient client)
+    protected void handleMessageFromClient(Object msg, ConnectionToClient client)
     {
-        if (msg instanceof String)
+        String message = msg.toString();
+
+        if (message.charAt(0) == '#')
         {
-            String message = (String) msg;
+            serverUI.display("[I] Message received: " + message + " from " + client);
 
-            if (message.charAt(0) == '#')
+            String[] tokens = message.split(" ");
+            try
             {
-                serverUI.display("[I] Message received: " + message + " from " + client);
-
-                String[] tokens = message.split(" ");
-                try
+                switch (tokens[0])
                 {
-                    switch (tokens[0])
-                    {
-                        case "#login":
-                            if (client.getInfo("loginID") == null)
+                    case "#login":
+                        if (client.getInfo("loginID") == null)
+                        {
+                            serverUI.display("[I] A new client is attempting to connect to the server");
+                            client.setInfo("loginID", tokens[1]);
+                            serverUI.display("[I] " + tokens[1] + " has logged on");
+                        }
+                        else
+                        {
+                            try
                             {
-                                serverUI.display("[I] A new client is attempting to connect to the server");
-                                client.setInfo("loginID", tokens[1]);
-                                serverUI.display("[I] " + tokens[1] + " has logged on");
+                                client.sendToClient(
+                                        "[E] The #login command should only be allowed as the first command");
+                                client.close();
                             }
-                            else
-                            {
-                                try
-                                {
-                                    client.sendToClient(
-                                            "[E] The #login command should only be allowed as the first command");
-                                    client.close();
-                                }
-                                catch (IOException ignored) {}
-                            }
-                            break;
-                        default:
-                            throw new IllegalArgumentException();
-                    }
-                }
-                catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e)
-                {
-                    serverUI.display("[W] Unknown command or syntax error from client " + client.toString());
+                            catch (IOException ignored) {}
+                        }
+                        break;
+                    case "#logoff":
+                        String s = "[I] " + client.getInfo("loginID") + " has disconnected";
+                        serverUI.display(s);
+                        sendToAllClients(s);
+                        break;
+                    default:
+                        throw new IllegalArgumentException();
                 }
             }
-            else
+            catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e)
             {
-                String loginID = client.getInfo("loginID").toString();
-                serverUI.display("[I] Message received: " + message + " from " + loginID);
-                this.sendToAllClients(loginID + ": " + msg);
+                serverUI.display("[W] Unknown command or syntax error from client " + client.toString());
             }
+        }
+        else
+        {
+            String loginID = client.getInfo("loginID").toString();
+            serverUI.display("[I] Message received: " + message + " from " + loginID);
+            this.sendToAllClients(loginID + "> " + msg);
         }
     }
 
@@ -153,7 +155,9 @@ public class EchoServer extends AbstractServer
         }
         else
         {
-            sendToAllClients("SERVER MSG> " + message);
+            String s = "SERVER MESSAGE> " + message;
+            serverUI.display(s);
+            sendToAllClients(s);
         }
     }
 
@@ -169,14 +173,12 @@ public class EchoServer extends AbstractServer
     @Override
     protected void clientConnected(ConnectionToClient client)
     {
-        super.clientConnected(client);
-        serverUI.display("[I] Client " + client.getInfo("loginID").toString() + " connected");
+        serverUI.display("[I] Client " + client.toString() + " connected");
     }
 
     @Override
     protected synchronized void clientDisconnected(ConnectionToClient client)
     {
-        super.clientDisconnected(client);
         serverUI.display("[I] Client " + client.getInfo("loginID").toString() + " disconnected");
     }
 

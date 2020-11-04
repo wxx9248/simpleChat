@@ -11,14 +11,14 @@ import java.util.Scanner;
  */
 public class ServerConsole implements ChatIF
 {
-    //Class variables *************************************************
+    // Class variables *************************************************
 
     /**
      * The default port to listen on.
      */
     final public static int DEFAULT_PORT = 5555;
 
-    //Instance variables **********************************************
+    // Instance variables **********************************************
 
     /**
      * The instance of the server.
@@ -31,7 +31,7 @@ public class ServerConsole implements ChatIF
     Scanner fromConsole;
 
 
-    //Constructors ****************************************************
+    // Constructors ****************************************************
 
     /**
      * Constructs an instance of the ServerConsole UI.
@@ -56,7 +56,7 @@ public class ServerConsole implements ChatIF
     }
 
 
-    //Instance methods ************************************************
+    // Instance methods ************************************************
 
     /**
      * This method is responsible for the creation of the Client UI.
@@ -65,7 +65,7 @@ public class ServerConsole implements ChatIF
      */
     public static void main(String[] args)
     {
-        int port; //Port to listen on
+        int port; // Port to listen on
 
         try
         {
@@ -102,7 +102,7 @@ public class ServerConsole implements ChatIF
         }
     }
 
-    //Class methods ***************************************************
+    // Class methods ***************************************************
 
     /**
      * This method overrides the method in the ChatIF interface.  It
@@ -112,7 +112,7 @@ public class ServerConsole implements ChatIF
      */
     public void display(String message)
     {
-        System.out.println("> " + message);
+        System.out.println(message);
     }
 }
 

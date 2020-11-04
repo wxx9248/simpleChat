@@ -95,7 +95,7 @@ public class ChatClient
                             break;
                         case "#logoff":
                             if (isConnected())
-                                closeConnection();
+                                logoff();
                             else
                                 clientUI.display("[W] Not connected");
                             break;
@@ -177,6 +177,12 @@ public class ChatClient
         clientUI.display("[I] " + loginID + " has logged on");
     }
 
+    public void logoff() throws IOException
+    {
+        sendToServer("#logoff");
+        closeConnection();
+    }
+
     /**
      * This method terminates the client.
      */
@@ -184,26 +190,26 @@ public class ChatClient
     {
         try
         {
-            closeConnection();
+            logoff();
         }
         catch (IOException ignored) {}
+
+        clientUI.display("[I] Quitting...");
         System.exit(0);
     }
 
     @Override
     protected void connectionClosed()
     {
-        super.connectionClosed();
-        clientUI.display("[I] Quitting...");
+        clientUI.display("[I] Connection closed");
     }
 
     @Override
     protected void connectionException(Exception exception)
     {
-        super.connectionException(exception);
-        clientUI.display("[E] A connection exception has occurred, printing stacktrace and quitting...");
-        exception.printStackTrace();
-        quit();
+        clientUI.display("[W] The server has stopped listening for connections");
+        clientUI.display("[W] SERVER SHUTTING DOWN! DISCONNECTING!");
+        clientUI.display("[W] Abnormal termination of connection");
     }
 }
 
