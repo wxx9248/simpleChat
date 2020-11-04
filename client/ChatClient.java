@@ -29,23 +29,36 @@ public class ChatClient
      */
     ChatIF clientUI;
 
+    /**
+     * Client login ID
+     */
+    String loginID;
 
     //Constructors ****************************************************
 
     /**
      * Constructs an instance of the chat client.
      *
+     * @param loginID  Client login ID
      * @param host     The server to connect to.
      * @param port     The port number to connect on.
      * @param clientUI The interface type variable.
      */
 
-    public ChatClient(String host, int port, ChatIF clientUI)
-            throws IOException
+    public ChatClient(String loginID, String host, int port, ChatIF clientUI)
     {
-        super(host, port); //Call the superclass constructor
+        super(host, port); // Call the superclass constructor
+        this.loginID  = loginID;
         this.clientUI = clientUI;
-        openConnection();
+
+        try
+        {
+            login();
+        }
+        catch (IOException e)
+        {
+            clientUI.display("[E] Cannot open connection. Awaiting command");
+        }
     }
 
 
@@ -70,14 +83,98 @@ public class ChatClient
     {
         try
         {
-            sendToServer(message);
+            if (message.charAt(0) == '#')
+            {
+                String[] tokens = message.split(" ");
+                try
+                {
+                    switch (tokens[0])
+                    {
+                        case "#quit":
+                            quit();
+                            break;
+                        case "#logoff":
+                            if (isConnected())
+                                closeConnection();
+                            else
+                                clientUI.display("[W] Not connected");
+                            break;
+                        case "#sethost":
+                            if (!isConnected())
+                            {
+                                setHost(tokens[1]);
+                                clientUI.display("[I] Host set to " + getHost());
+                            }
+                            else
+                                clientUI.display("[W] Please disconnect first");
+                            break;
+                        case "#setport":
+                            if (!isConnected())
+                            {
+                                setPort(Integer.parseInt(tokens[1]));
+                                clientUI.display("[I] Port set to " + getPort());
+                            }
+                            else
+                                clientUI.display("[W] Please disconnect first");
+                            break;
+                        case "#login":
+                            if (!isConnected())
+                            {
+                                try
+                                {
+                                    login();
+                                }
+                                catch (IOException e)
+                                {
+                                    clientUI.display("[E] Cannot open connection. Awaiting command");
+                                }
+                            }
+                            else
+                                clientUI.display("[W] Already connected");
+                            break;
+                        case "#gethost":
+                            clientUI.display("[I] Host: " + getHost());
+                            break;
+                        case "#getport":
+                            clientUI.display("[I] Port: " + getPort());
+                            break;
+                        default:
+                            throw new IllegalArgumentException();
+                    }
+                }
+                catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e)
+                {
+                    clientUI.display("[W] Unknown command or syntax error");
+                }
+            }
+            else
+            {
+                sendToServer(message);
+            }
         }
         catch (IOException e)
         {
-            clientUI.display
-                    ("Could not send message to server.  Terminating client.");
-            quit();
+            clientUI.display("[E] Could not send message to server.");
         }
+        catch (StringIndexOutOfBoundsException ignored)
+        {}
+    }
+
+    /**
+     * Getter of loginID
+     *
+     * @return String LoginID of the client
+     */
+    public String getLoginID()
+    {
+        return loginID;
+    }
+
+    public void login() throws IOException
+    {
+        openConnection();
+        sendToServer("#login " + loginID);
+        clientUI.display("[I] " + loginID + " has logged on");
     }
 
     /**
@@ -89,8 +186,25 @@ public class ChatClient
         {
             closeConnection();
         }
-        catch (IOException e) {}
+        catch (IOException ignored) {}
         System.exit(0);
     }
+
+    @Override
+    protected void connectionClosed()
+    {
+        super.connectionClosed();
+        clientUI.display("[I] Quitting...");
+    }
+
+    @Override
+    protected void connectionException(Exception exception)
+    {
+        super.connectionException(exception);
+        clientUI.display("[E] A connection exception has occurred, printing stacktrace and quitting...");
+        exception.printStackTrace();
+        quit();
+    }
 }
-//End of ChatClient class
+
+// End of ChatClient class

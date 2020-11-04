@@ -32,8 +32,7 @@ import java.net.SocketException;
  * @author Paul Holden
  * @version February 2001 (2.12)
  */
-public abstract class AbstractClient
-        implements Runnable
+public abstract class AbstractClient implements Runnable
 {
 
     // INSTANCE VARIABLES ***********************************************
@@ -100,8 +99,7 @@ public abstract class AbstractClient
      *
      * @throws IOException if an I/O error occurs when opening.
      */
-    final public void openConnection()
-            throws IOException
+    final public void openConnection() throws IOException
     {
         // Do not do anything if the connection is already open
         if (isConnected())
@@ -142,8 +140,7 @@ public abstract class AbstractClient
      *
      * @throws IOException if an I/O error occurs when sending
      */
-    final public void sendToServer(Object msg)
-            throws IOException
+    final public void sendToServer(Object msg) throws IOException
     {
         if (clientSocket == null || output == null)
             throw new SocketException("socket does not exist");
@@ -156,8 +153,7 @@ public abstract class AbstractClient
      * buffer repeatedly. This would not normally be used, but is necessary
      * in some circumstances when Java refuses to send data that it thinks has been sent.
      */
-    final public void forceResetAfterSend()
-            throws IOException
+    final public void forceResetAfterSend() throws IOException
     {
         output.reset();
     }
@@ -167,8 +163,7 @@ public abstract class AbstractClient
      *
      * @throws IOException if an I/O error occurs when closing.
      */
-    final public void closeConnection()
-            throws IOException
+    final public void closeConnection() throws IOException
     {
         // Prevent the thread from looping any more
         readyToStop = true;
@@ -339,8 +334,7 @@ public abstract class AbstractClient
      *
      * @throws IOException if an I/O error occurs when closing.
      */
-    private void closeAll()
-            throws IOException
+    private void closeAll() throws IOException
     {
         try
         {

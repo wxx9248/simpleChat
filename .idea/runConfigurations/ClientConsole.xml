@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="ClientConsole" type="Application" factoryName="Application" singleton="false">
+    <option name="MAIN_CLASS_NAME" value="ClientConsole" />
+    <module name="simpleChat" />
+    <option name="PROGRAM_PARAMETERS" value="wxx9248 localhost 5556" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

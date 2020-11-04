@@ -5,7 +5,6 @@
 import client.ChatClient;
 import common.ChatIF;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -46,23 +45,13 @@ public class ClientConsole implements ChatIF
     /**
      * Constructs an instance of the ClientConsole UI.
      *
-     * @param host The host to connect to.
-     * @param port The port to connect on.
+     * @param loginID Client login ID
+     * @param host    The host to connect to.
+     * @param port    The port to connect on.
      */
-    public ClientConsole(String host, int port)
+    public ClientConsole(String loginID, String host, int port)
     {
-        try
-        {
-            client = new ChatClient(host, port, this);
-
-
-        }
-        catch (IOException exception)
-        {
-            System.out.println("Error: Can't setup connection!"
-                               + " Terminating client.");
-            System.exit(1);
-        }
+        client = new ChatClient(loginID, host, port, this);
 
         // Create scanner object to read from console
         fromConsole = new Scanner(System.in);
@@ -74,22 +63,43 @@ public class ClientConsole implements ChatIF
     /**
      * This method is responsible for the creation of the Client UI.
      *
-     * @param args[0] The host to connect to.
+     * @param args [0] The host to connect to.
      */
     public static void main(String[] args)
     {
-        String host = "";
+        String loginID;
+        String host;
+        int    port;
 
         try
         {
-            host = args[0];
+            loginID = args[0];
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
-            host = "localhost";
+            System.err.println("[E] No login ID specified. Connection aborted");
+            return;
         }
-        ClientConsole chat = new ClientConsole(host, DEFAULT_PORT);
-        chat.accept();  //Wait for console data
+
+        if (loginID.contains(" "))
+        {
+            System.err.println("[E] Login ID must not have space. Connection aborted");
+            return;
+        }
+
+        try
+        {
+            host = args[1];
+            port = Integer.parseInt(args[2]);
+        }
+        catch (ArrayIndexOutOfBoundsException | NumberFormatException e)
+        {
+            host = "localhost";
+            port = DEFAULT_PORT;
+        }
+
+        ClientConsole chat = new ClientConsole(loginID, host, port);
+        chat.accept();  // Wait for console data
     }
 
     /**
@@ -108,13 +118,12 @@ public class ClientConsole implements ChatIF
                 client.handleMessageFromClientUI(message);
             }
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            System.out.println
-                    ("Unexpected error while reading from console!");
+            System.err.println("[E] Unexpected error while reading from console!");
+            e.printStackTrace();
         }
     }
-
 
     //Class methods ***************************************************
 
@@ -129,4 +138,5 @@ public class ClientConsole implements ChatIF
         System.out.println("> " + message);
     }
 }
-//End of ConsoleChat class
+
+// End of ClientConsole class

@@ -28,8 +28,7 @@ import java.util.HashMap;
  * @author Paul Holden
  * @version February 2001 (2.12)
  */
-public class ConnectionToClient
-        extends Thread
+public class ConnectionToClient extends Thread
 {
     // INSTANCE VARIABLES ***********************************************
 
@@ -82,8 +81,7 @@ public class ConnectionToClient
      *
      * @throws IOException if an I/O error occur when creating the connection.
      */
-    ConnectionToClient(ThreadGroup group, Socket clientSocket, AbstractServer server)
-            throws IOException
+    ConnectionToClient(ThreadGroup group, Socket clientSocket, AbstractServer server) throws IOException
     {
         super(group, (Runnable) null);
         // Initialize variables
@@ -124,8 +122,7 @@ public class ConnectionToClient
      *
      * @throws IOException if an I/O error occur when sending the message.
      */
-    final public void sendToClient(Object msg)
-            throws IOException
+    final public void sendToClient(Object msg) throws IOException
     {
         if (clientSocket == null || output == null)
             throw new SocketException("socket does not exist");
@@ -138,8 +135,7 @@ public class ConnectionToClient
      * buffer repeatedly. This would not normally be used, but is necessary
      * in some circumstances when Java refuses to send data that it thinks has been sent.
      */
-    final public void forceResetAfterSend()
-            throws IOException
+    final public void forceResetAfterSend() throws IOException
     {
         output.reset();
     }
@@ -150,8 +146,7 @@ public class ConnectionToClient
      *
      * @throws IOException if an error occurs when closing the socket.
      */
-    final public void close()
-            throws IOException
+    final public void close() throws IOException
     {
         readyToStop = true; // Set the flag that tells the thread to stop
 
@@ -260,8 +255,7 @@ public class ConnectionToClient
      *
      * @throws IOException if an I/O error occur when closing the connection.
      */
-    private void closeAll()
-            throws IOException
+    private void closeAll() throws IOException
     {
         try
         {

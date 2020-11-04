@@ -33,8 +33,7 @@ import java.net.Socket;
  * @version February 2001 (2.12)
  * @see ocsf.server.ConnectionToClient
  */
-public abstract class AbstractServer
-        implements Runnable
+public abstract class AbstractServer implements Runnable
 {
     // INSTANCE VARIABLES *********************************************
 
@@ -117,8 +116,7 @@ public abstract class AbstractServer
      * @throws IOException if an I/O error occurs
      *                     when creating the server socket.
      */
-    final public void listen()
-            throws IOException
+    final public void listen() throws IOException
     {
         if (!isListening())
         {
@@ -154,8 +152,7 @@ public abstract class AbstractServer
      * @throws IOException if an I/O error occurs while
      *                     closing the server socket.
      */
-    final synchronized public void close()
-            throws IOException
+    final synchronized public void close() throws IOException
     {
         if (serverSocket == null)
             return;
